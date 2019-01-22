@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Welcome to Calculator!</title>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+</head>
+<body>
+	<h1>Calculator</h1>
+
+	<form action="calculator.php" method="GET">
+
+		<div>
+			<label for="num1_label">Number 1: </label>
+			<input type="text" name="num1_input" id="num1_label" required >
+			<label for="num2_label">Number 2: </label>
+			<input type="text" name="num2_input" id="num2_label" required >
+		</div>
+
+		<div>
+			<div>
+				<label for="add_label"><i class="fa fa-plus" style="font-size:18px"></i></label>
+				<input type="radio" name="calc_op" value="Add" id="add_label" required >
+
+			</div>
+			<div>
+				<label for="sub_label"><i class="fa fa-minus" style="font-size:18px"></i></label>
+				<input type="radio" name="calc_op" value="Sub" id="sub_label" required >
+
+			</div>
+			<div>
+				<label for="mult_label"><i class="fa fa-times" style="font-size:18px"></i></label>
+				<input type="radio" name="calc_op" value="Mult" id="mult_label" required >
+
+			</div>
+			<div>
+				<label for="div_label"><i class="fas fa-divide" style="font-size:18px"></i></label>
+				<input type="radio" name="calc_op" value="Div" id="div_label" required >
+
+			</div>
+			<div>
+				<input type="submit" name="submit_button" value="Submit">
+			</div>
+			
+		</div>
+	</form >
+	</body>
+	</html>

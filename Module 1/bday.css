@@ -1,0 +1,24 @@
+h1{
+	color: red;
+	text-align: center;
+	margin: auto;
+	text-shadow: 2px 3px green;
+}
+
+p{
+	color: blue;
+}
+body{
+	background-color: #da9b00;
+}
+#image{
+	text-align: center;
+}
+h2{
+	color: blue;
+	text-shadow: 4px 4px red;
+	font-style: italic;
+	font-size: 45px;
+	text-align: center;
+	margin: auto;
+}

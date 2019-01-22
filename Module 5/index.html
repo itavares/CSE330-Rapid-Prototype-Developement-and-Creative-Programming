@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Event Calendar</title>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script type="text/javascript">
+		//global variable to keep track if user is logged in. This is used to load events only when someone is logged in.
+		var userLoggedIn = false;
+		var trackEvent;
+		var token_val;
+	</script>
+	<script src="userHandler.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="http://classes.engineering.wustl.edu/cse330/content/calendar.min.js"></script> 
+	<!--Loging popup -->
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+
+
+
+
+
+	<script type="text/javascript">
+	function $(id){
+		return document.getElementById(id)
+	}
+
+	//loging popup
+	function loginPopup(checkshow){
+		if(checkshow == "show"){
+			$("popupLogin").style.visibility="visible";
+			$('closePopup').style.visibility="visible";
+			$('openPopup').style.visibility="hidden";
+		}
+		else if(checkshow == "hide"){
+			$('addEventDiv').style.visibility="hidden";
+			$("popupLogin").style.visibility="hidden";
+			$('openPopup').style.visibility="visible";
+			$('editEventDiv').style.visibility="hidden";
+		}
+	}
+	//function for add div (show and hide)
+	function addEventPopup(e){
+		if(e == "show"){
+			$("addEventDiv").style.visibility="visible";
+		}
+		else if(e == "hide"){
+			$('addEventDiv').style.visibility="hidden";
+		}
+	}
+
+	//function for edit div (show and hide)
+	function editEventPopup(e){
+			if(e == "show"){
+			$("editEventDiv").style.visibility="visible";
+		}
+		else if(e == "hide"){
+			$('editEventDiv').style.visibility="hidden";
+		}
+	}
+
+
+	</script>
+</head>
+<body>
+
+
+	<!--User Login! -->
+	<div id="popupLogin">	
+		<center><label for="username">Username: </label></center>
+		<center><input type="text" id="usernameLogin" ></center>
+		
+		<center><label for="password">Password: </label></center>
+		<center><input type="password" id="usernamePassword" ></center>
+		<br>
+		<center><input type="submit" name="sendLogin" id="loginButton" value="Login"></center>
+		<center><input type="submit" name="sendLogin"id="registerButton" value="Register"></center>
+		<br>
+	</div>
+	<div id="openClosePopup">
+		<div id="closePopup" style="visibility=hidden">
+			<center><a id="close_Popup" href="javascript:loginPopup('hide');">Close</a></center>
+		</div>
+		<div id="openPopup">
+			<button type="button" id="open_popup"><a id="open_Popup" href="javascript:loginPopup('show');">Login</a></button>
+		</div>
+	</div>
+
+	<div id="userspaceDiv">
+		<center>Hello, <span id="userNameTitle"></span> 
+			 		 <span id="usernameIdSpan"></span></center><br>
+			 		 <input type="submit" id="userLogoutSubmit" value="LOGOUT">
+
+
+	</div>
+
+<!--############################ CALENDAR DIV (MONTH NAME) ################### -->
+
+	<center><div class="month">
+
+		<!--Left Button -->
+		<button  class="prev_month_btn" id="prev_month_btn"><i class="fa fa-caret-square-o-left"> PREV</i></button>
+		<button class="next_month_btn" id="next_month_btn">NEXT <i class="fa fa-caret-square-o-right"></i></button>
+		<p  class="monthName" id="monthName"></p></center>
+
+	</div>
+<!--############################ CALENDAR DYNAMICALLY CREATED IN JS ################### -->
+
+	<center><div class="calendarDiv">
+		<div class="calendarMain" id="calendarMain">
+			<div class="calendarDayDiv">
+			</div>
+			<div class="calendarDayFill" id="calendarDayFill">
+				<table  id="calendarTable"><tbody>
+					<!--Addrow() function will create the table rows -->
+				</tbody></table>
+			</div>
+
+		</div>
+	</div></center>
+
+
+
+<!--############################ EVENTS HANDLER (ADD,EDIT,DELETE,SHARE) ################### -->
+
+<div class="eventHandlerDiv">
+	
+	<div id="openClosePopup">
+		<div id="closePopup" >
+			<center><button id="addaEventButton"><a id="addEvent" href="javascript:addEventPopup('show');">Add New Event</a></center></button>
+		</div>
+		<div id="closePopup_edit">
+			<center><button id="editEventButton"><a id="editEvent" href="javascript:editEventPopup('show');">Edit Event</a></center></button>
+		</div>
+	</div>
+
+	<!--############################ DELETE EVENT DIV ################### -->
+	<div id="eventDeleteButton">
+
+		<center><input type="submit" id="deleteEventButtonSubmit" value="DELETE"  style="visibility=hidden"></center>
+
+		<center><input type="number" id="shareUserId" max="1000" size="2" placeholder="user's id"> <input type="submit" id="shareEvent" value="SHARE"></center>
+	</div>
+	
+	<!--############################ ADD EVENT DIV ################### -->
+	<div id="addEventDiv" >
+		<center><label for="username">Title: </label></center>
+		<center><input type="text" id="eventTitle" required="True" ></center>	
+
+		<center><label for="password">Time: </label></center>
+		<center><input type="number" id="eventTimeHour" min="1" max="12" size="2" required="True" ></center>
+		<center><input type="number" id="eventTimeMinute" min="0" max="59" size="2" required="True" ></center>
+		
+		<center><label for="username">Month: </label></center>
+		<center><input type="number" id="eventMonth"  min="1" max="12" size="2" required="True" ></center>
+
+		<center><label for="username">Day: </label></center>
+		<center><input type="number" id="eventDay"  min="1" max="31" size="2" required="True" ></center>
+
+		<center><label for="username">Year: </label></center>
+		<center><input type="number" id="eventYear"  min="0" max="10000" size="4" required="True" ></center>
+		<br>
+		<center><button><a id="addNewEvent" href="javascript:addEventPopup('hide');">New Event</a></center></button>
+		<center><button><a id="close_add_popup" href="javascript:addEventPopup('hide');">close</a></center></button>
+
+		
+	</div>
+
+	<!--############################ EDIT EVENT DIV ################### -->
+	<div id="editEventDiv" >
+		<center><label for="username"> New Title: </label></center>
+		<center><input type="text" id="editEventTitle" required="True" ></center>	
+
+		<center><label for="password">New Time: </label></center>
+		<center><input type="number" id="editEventTimeHour" min="1" max="12" size="2" required="True" ></center>
+		<center><input type="number" id="editEventTimeMinute" min="0" max="59" size="2" required="True" ></center>
+		<center><button><a id="editEventSubmit" href="javascript:editEventPopup('hide');">Update Event</a></center></button>
+		<center><button><a id="close_add_popup" href="javascript:editEventPopup('hide');">close</a></center></button>
+
+</div>
+	<script src="helperFunctions.js"></script>
+	<script src="jscalendar.js"></script>
+
+	<script src="eventHandler.js"></script>
+	<script type="text/javascript">
+      
+	</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>News Website</title>
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+	<div id="titleOfWebsite">
+		<h1>Welcome to News Website</h1>
+		<h2>Where all the news comes from trusted sources!</h4>
+	</div>
+	
+	<div id="loginRegistrerDiv">
+		<img src="imageOfLogin" alt="">
+
+		<form action="login.php" method="POST">
+			<label for="username">Username: </label>
+			<input type="text" id="username" name="username" placeholder="username">
+			
+			<label for="password">Password: </label>
+			<input type="password" id="password" name="password" placeholder="*****" required=True>
+			
+			<input type="submit" name="goLogin" value="Log In">
+		</form>
+		<br>
+		<br>
+		<br>
+		<h2>If you are new to the website, don't forget to create a new account below! </h2>
+
+		<img src="imageOfRegistration" alt=""> 
+		<!-- method is not really needed here since the user is just being redirected to a new php page -->
+		<form action="register.php" method="POST">
+			<label for="rgsUsername">New Username: </label>
+			<input type="text" id="rgsUsername" name="registerUsername"><br>
+			<label for="userPassword">Password: </label>
+			<input type="password" id="userPassword" name="userPassword"><br>
+			<label for="userPasswordCheck">Password Check: </label>
+			<input type="password" id="userPasswordCheck" name="userPasswordCheck" required=True><br>
+			<input type="submit" name="goRegister" value="Register!">
+
+		</form>
+
+	</div>
+
+
+</body>
+</html>

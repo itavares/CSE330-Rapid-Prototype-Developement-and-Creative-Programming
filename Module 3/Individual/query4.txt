@@ -1,0 +1,9 @@
++------------+-----------+-------------------+-----------+
+| first_name | last_name | email_address     | grades    |
++------------+-----------+-------------------+-----------+
+| Ben        | Harper    |  bharper@ffym.com | 43.500000 |
+| Tim        | Armstrong | tArmz@rancid.com  | 45.000000 |
++------------+-----------+-------------------+-----------+
+2 rows in set (0.00 sec)
+
+SELECT  students.first_name ,students.last_name , students.email_address, avg(grade) AS grades FROM grades JOIN students ON (grades.student_id = students.student_id ) GROUP BY first_name HAVING grades <  50;

@@ -1,0 +1,12 @@
+
++------------+-----------+------------+--------+-------------+
+| first_name | last_name | student_id | grade  | course_code |
++------------+-----------+------------+--------+-------------+
+| Ben        | Harper    |         88 |  35.50 | 330S        |
+| Marc       | Roberge   |        115 |  75.00 | 330S        |
+| Matt       | Freeman   |        202 | 100.00 | 330S        |
++------------+-----------+------------+--------+-------------+
+3 rows in set (0.00 sec)
+
+
+SELECT first_name, last_name,grades.student_id, grades.grade, grades.course_code FROM students JOIN grades ON (students.student_id =grades.student_id) WHERE course_code LIKE '330S';

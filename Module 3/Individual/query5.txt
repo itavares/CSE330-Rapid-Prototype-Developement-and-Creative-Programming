@@ -1,0 +1,9 @@
++------------+------------------------------+-------------------+
+| student_id | email_address                | avg(grades.grade) |
++------------+------------------------------+-------------------+
+|        257 | jjmuzak@brushfirerecords.com |         96.125000 |
++------------+------------------------------+-------------------+
+1 row in set (0.00 sec)
+
+
+SELECT students.student_id , students.email_address , avg(grades.grade) FROM students JOIN grades ON (students.student_id = grades.student_id ) WHERE students.student_id = "257";

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Calculator</title>
+
+	<style>
+	legend {
+		background-color: #000;
+		color: #fff;
+		padding: 3px 6px;
+	}
+
+	.output {
+		font: 1rem 'Fira Sans', sans-serif;
+	}
+
+	input {
+		margin: .4rem;
+	}
+	div{
+		margin:0 auto;
+		width: 800px;
+	}
+
+	</style>
+</head>
+<body>
+	<div class="inputDiv">
+		<table border="solid">
+			<th> 
+				<label for="number1">Number 1: </label>
+				<input type="text" id="num1" name="input1" value="0">
+			</th>
+			<th> 
+				<label for="number2">Number 2: </label>
+				<input type="text" id="num2" name="input2" value="0">
+			</th>
+			<br>
+			<th>
+				<label for="" id="finalCalculation">?</label>
+			</th>
+		</table>
+	</div>
+
+
+
+
+	<div style="text-align: center" class="radioButtons">
+		<div>
+			<input type="radio" id="add" name="calculatorFunc" checked />
+			<label for="huey">Add(+)</label>
+		</div>
+
+		<div>
+			<input type="radio" id="sub" name="calculatorFunc" />
+			<label for="dewey">Sub(-)</label>
+		</div>
+
+		<div>
+			<input type="radio" id="mult" name="calculatorFunc" />
+			<label for="louie">Mult(*)</label>
+		</div>
+		<div>
+			<input type="radio" id="div" name="calculatorFunc" />
+			<label for="louie">Div(/)</label>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	//replaces getElementById with $("idname")
+	function $(id){
+		return document.getElementById(id)
+	}
+	
+	function calculatorFunction(){
+
+		var finalCalculation  = $("finalCalculation").value
+		var num1 = parseFloat($("num1").value)//parseFloat to turn input into a "valid" integer/double
+		var num2 = parseFloat($("num2").value)
+
+		if (typeof num1 == 'string'){
+			alert("Must input numbers")
+			$('num1').value = "0"
+		}
+		console.log($("num1").value)
+
+		var addFunction = $("add")
+		var subFunction = $("sub")
+		var multFunction = $("mult")
+		var divFunction = $("div")
+
+		if(addFunction.checked){
+			finalCalculation = num1+num2
+
+			$("finalCalculation").innerHTML = "= " + (finalCalculation)
+		}
+		if(subFunction.checked){
+			finalCalculation = num1-num2
+
+			$("finalCalculation").innerHTML = "= " + (finalCalculation)
+		}		
+		if(multFunction.checked){
+			finalCalculation = num1*num2
+
+			$("finalCalculation").innerHTML = "= " + (finalCalculation)
+		}
+		if(divFunction.checked){
+			if(num2 == 0){
+				alert("Cannot dived by 0")
+
+			}
+			if(num1 == 0){
+				$("finalCalculation").innerHTML ="= ... "
+			}
+			else{
+				finalCalculation = num1/num2
+				$("finalCalculation").innerHTML = "= " + (finalCalculation)
+			}
+		}
+
+
+		addFunction.addEventListener("click",calculatorFunction)
+		subFunction.addEventListener("click",calculatorFunction)
+		multFunction.addEventListener("click",calculatorFunction)
+		divFunction.addEventListener("click",calculatorFunction)
+		$("num1").addEventListener("keyup",calculatorFunction)
+		$("num2").addEventListener("keyup",calculatorFunction)
+	}
+
+	calculatorFunction()
+
+
+
+
+
+	// })
+
+	</script>
+	</body>
+	</html>

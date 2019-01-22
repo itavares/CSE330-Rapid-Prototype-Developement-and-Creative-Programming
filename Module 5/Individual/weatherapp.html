@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Weather WebApp</title>
+
+	<link rel="stylesheet" type="text/css" href="https://classes.engineering.wustl.edu/cse330/content/weather.css">
+
+	<script type="text/javascript">
+	getWeather();
+
+	//helper functions to make easier to access elements in document.
+	function $$(className){
+		return document.getElementsByClassName(className)
+	}
+	function $(id){
+		return document.getElementById(id)
+	}
+
+	function getWeather(){
+		var xhttp = new XMLHttpRequest();
+		xhttp.open("GET","https://classes.engineering.wustl.edu/cse330/content/weather_json.php", true);
+		xhttp.addEventListener("load", updateWeatherApp,false);
+		xhttp.send(null);
+	}
+
+
+	function updateWeatherApp(event){
+		//gets json information from xhttp call
+		$("updateButton").addEventListener("click",getWeather, false) 
+		//parse into json
+		let weatherJsonData = JSON.parse(event.target.responseText)
+		
+		var weatherLocation = $$('weather-loc')[0]
+		weatherLocation.innerHTML = weatherJsonData.location.city + " " + weatherJsonData.location.state
+		var weatherHumidity = $$('weather-humidity')[0]
+		weatherHumidity.innerHTML = weatherJsonData.atmosphere.humidity 
+		console.log(weatherLocation.innerHTML)
+		var weatherTemperature = $$('weather-temp')[0]
+		weatherTemperature.innerHTML = weatherJsonData.current.temp
+		var weatherTomoorow = $$('weather-tomorrow')[0]
+		weatherTomoorow.src = "http://us.yimg.com/i/us/nws/weather/gr/"+ weatherJsonData.tomorrow.code + "ds.png"
+		var weatherDayAfterTomorrow = $$('weather-dayaftertomorrow')[0]
+		weatherDayAfterTomorrow.src = "http://us.yimg.com/i/us/nws/weather/gr/"+ weatherJsonData.dayafter.code + "ds.png"
+	
+	}
+
+	</script>
+</head>
+<body>
+
+
+	<div class="weather" id="weatherWidget">
+		<div class="weather-loc"></div>
+		<div class="weather-humidity"></div>
+		<div class="weather-temp"></div>
+		<img class="weather-tomorrow" />
+		<img class="weather-dayaftertomorrow" />
+	</div>
+	<button id="updateButton">update!</button>
+
+</body>
+</html>

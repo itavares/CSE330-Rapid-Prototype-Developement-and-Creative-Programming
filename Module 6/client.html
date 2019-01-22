@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>
+		Magic Chat Room
+	</title>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script src="/socket.io/socket.io.js"></script> 
+
+	<script>
+		//connection to the server side
+		
+		var socket_io = io.connect();
+		var checkChannel, checkUser;
+
+	
+	
+	
+	//new connection, as default, we send a guest name (wonderer) to the server
+	socket_io.on('connect', function(){
+		socket_io.emit("getNewConnection",'Wonderer_');
+	});
+	
+	
+	socket_io.on("sendTextClient", function(textReceived){
+		//https://classes.engineering.wustl.edu/cse330/index.php?title=Socket.IO
+		//the chat client layout
+		document.getElementById("textReceived").appendChild(document.createTextNode("<"+textReceived['username'] + "> | "));
+		document.getElementById("textReceived").appendChild(document.createTextNode(textReceived['text'] + " |"));
+		document.getElementById("textReceived").appendChild(document.createElement("br"));
+		document.getElementById("textReceived").appendChild(document.createElement("br"));
+
+	
+	
+	
+	});
+	
+	socket_io.on("nameValidationn",function(event){
+		document.getElementById("currNameInServer").innerHTML=event['message'];
+
+
+
+	});
+
+	//notifies channel of changes
+	socket_io.on("chatAdjust",function(event){
+		//https://classes.engineering.wustl.edu/cse330/index.php?title=Socket.IO
+		//the chat client layout
+		document.getElementById("textReceived").appendChild(document.createTextNode("========"));
+		document.getElementById("textReceived").appendChild(document.createTextNode(event['channelUpdate']));
+		document.getElementById("textReceived").appendChild(document.createTextNode("========"));
+		document.getElementById("textReceived").appendChild(document.createElement("br"));
+	});
+
+	socket_io.on("channelsArray",function(event){
+		var $listofchannels = $('<table></table>');
+		$("#channelsArray").empty();
+		$("#channelsArray").text= "Click On Channel To Join!";
+		for (var channel = 0; channel < event.length; channel++){
+			checkChannel = event[channel];
+			var $newChannel = $('<tr></tr>').text(event[channel]).addClass("channelIdentifier");
+			console.log(checkChannel);
+			$listofchannels.append($newChannel);
+			console.log($listofchannels);
+			checkChannel = event[channel];
+
+		}
+
+		$('#channelsArray').append($newChannel);
+		checkChannel = event[channel];
+
+	});
+
+	socket_io.on("checkChannelPassword",function(event){
+		var getPassFromClient = prompt("What is the secret code to enter " +event + "...");
+		console.log(getPassFromClient);
+		socket_io.emit("channelPassword",
+		{
+			"channel": event ,
+			"secretCode": getPassFromClient
+		});
+
+	});
+
+
+	socket_io.on("kickHimOut",function(event){
+		var sendBackTolobby = 'ChannelLoby';
+		socket_io.emit("joinChannel",'ChannelLoby');
+		$('#currLord').empty();
+
+	});
+	
+	socket_io.on("usersArray", function(listOfUsers){
+			// document.getElementById('usersArray').innerHTML = "";
+			$('#usersArray').empty();
+			//alert(listOfUsers);
+			var $list = $('<table></table>');
+			//shows whos the owen of a room, in this case, the first one on
+			//lobby is the admin (The Oversee)
+			var $owner =$('<tr></tr>').text("Lord: " + listOfUsers[0] );
+			$list.append($owner);
+
+			for(var i = 1; i<listOfUsers.length; i++){
+				$otherUsers = $('<tr></tr>').text(listOfUsers[i]).addClass('classForSelect');
+				$list.append($otherUsers);
+			}
+			
+			var $userKickButton=$('<button></button>').text('Kick').attr('id','kickUserButton'),
+				$userPrivateMsg=$('<button></button>').text('PM').attr('id','privateMsg');
+			$('#usersArray').append($list);
+			$('#currLord').text("   ");
+			$('#usersArray').append($userKickButton);
+			$('#usersArray').append($userPrivateMsg);
+		});
+
+
+	socket_io.on("sendDmToUser",function(event){
+		//https://classes.engineering.wustl.edu/cse330/index.php?title=Socket.IO
+		//the chat client layout
+		document.getElementById("textReceived").appendChild(document.createTextNode("Dm From: <--"));
+		document.getElementById("textReceived").appendChild(document.createTextNode(event['username']));
+		document.getElementById("textReceived").appendChild(document.createTextNode("-->  "));
+		document.getElementById("textReceived").appendChild(document.createTextNode(event['text']));
+
+		document.getElementById("textReceived").appendChild(document.createElement("br"));
+	});
+
+
+
+
+
+	</script>
+</head>
+<body>
+	<!--Tittle  -->
+	
+	<h2> Magic Chat </h2>
+<!-- ###############  USER STUFF ############### -->
+
+	<div id="userHandler">
+		<div id="newUser">
+			<label for="newUsername">New Username: </label>
+			<input id="newUsername"  type="text">
+			<input onclick="changeUsername()" type="submit" value="New User">
+			<p id="currNameInServer"></p>
+
+		</div>
+		
+	 	<div id="channelUsersCurr">
+	 		<h3>CURRENT USERS IN CHANNEL</h3>
+	 		<span id="usersArray"></span>
+				
+
+	 		<!-- show current user that is selected -->
+			<label>Chosen One:<span id="currLord"></span></label>
+		
+	 	</div>
+
+	</div>
+	<br><br>
+
+
+<!-- ###############  CHANNEL STUFF ############### -->
+
+	<center><div id="channelHander">
+		<div id="createChannel">
+			<label for="newChannel"> New Channel Name: </label>
+			<input type="text" id="newChannel">
+			<br>
+			<label for="channelPassh">Secret Code: </label>
+			<input type="password" id="channelPassh" >
+			<button onclick="createNewChannelClient()"  id="fnChannel">New Channel </button>
+			
+		</div>
+
+
+		<div id="availableChannels">
+			<p>List of Channels:</p><br>
+			<span id="channelsArray"></span>
+		</div><br>
+
+
+<br>
+<br>
+
+	</div></center>
+
+<!-- ###############  TEXT STUFF ############### -->
+
+	<center><div id="channelTextHandler">
+		<p>Secret Messages (not really)</p>
+		<input type="text" id="userTextSend">
+		<button onclick="sendtextButton()"  id="sendText"> Send Text</button>
+
+		<br>
+
+		<div id="texts">
+			<table id="textReceived">
+			</table>
+						
+
+		</div>
+
+		<button  onclick="clearChannelArea()" id="resetText">Clear</button>
+	
+
+
+	</div></center>
+
+
+
+
+
+
+
+
+</body>
+
+<script type="text/javascript">
+	//globla variables
+
+	var currentUserTracker = null;
+	$(document).ready(function(){
+	
+		$(document).on('click', '.classForSelect',function(){
+		console.log("User Selected");//debug
+		currentUserTracker = $(this).text();
+		console.log(currentUserTracker); //debug
+		$("#currLord").text($(this).text());
+		
+		});
+
+		$(document).on('click','.channelIdentifier',function(){
+
+			socket_io.emit("joinChannel",$(this).text());
+			currentUserTracker=null;
+			$("#currLord").text("");
+			
+		});
+
+	});
+
+
+</script>
+
+<script type ="text/javascript">
+
+	function introToChannel(){
+		alert("Hello There, here are some instructions:\n ->Click on user name to select a user \n -> click on channel name under list to join channel");
+
+	}
+	introToChannel();
+
+	function sendtextButton(){
+	var clientTextToServer = document.getElementById("userTextSend").value;
+	socket_io.emit("sendtextServer", {"text": clientTextToServer});
+	// $('#userTextSend').empty();
+
+	}
+
+	//function for changing the username in client side
+	function changeUsername(){
+		//get input of new username and sends to server 
+		var getnewUsername = document.getElementById("newUsername").value;
+		//sends to server
+		socket_io.emit("getNewUsername", {
+			newUsername: getnewUsername
+		});
+		
+	}
+
+	function clearChannelArea(){
+		//https://stackoverflow.com/questions/1701973/how-to-clear-all-divs-contents-inside-a-parent-div
+		//jequery empty does the job to clear the child nodes of the chat area
+		$('#textReceived').empty();
+	}
+
+	//create new Channel button function
+	function createNewChannelClient(){
+		//get channel name and pass
+		var channelName  = $("#newChannel").val();
+		var channePass = $("#channelPassh").val();
+		socket_io.emit("newChannel",{
+			"channelName": channelName,
+			"channelPass":channePass
+		});
+
+		$("#newChannel").empty();
+	}
+
+	$(document).ready(function(){
+		$(document).on('click','#privateMsg',function(){
+		var luckperson =currentUserTracker,
+			sendTheDm = prompt("Sneaky Sneaky, What should the other person be peaky? PM TO : "+luckperson);
+		
+			//alert(sendTheDm);
+		socket_io.emit("diveIntoDms",
+		{
+			text: sendTheDm ,
+			secretPerson: luckperson
+		})
+
+
+		});
+
+	$(document).on('click','#kickUserButton',function(){
+		var luckperson2 =currentUserTracker,
+			 kcikreason = prompt("Why kick "+luckperson2 + " ?  (better be good)");
+			 console.log("kick func"+luckperson2);
+			socket_io.emit('kickHimOut',
+			{
+				'kickReason': kcikreason,
+				'kickperson': luckperson2
+			});
+		
+
+	});
+		$(document).on('click','#fnChannel',function(){
+				//get channel name and pass
+				var channelName  = $("#newChannel").val();
+			var channePass = $("#channelPassh").val();
+			socket_io.emit("newChannel",{
+				"channelName": channelName,
+				"channelPass":channePass
+			});
+
+			$("#newChannel").empty();
+		});
+		
+
+	});
+
+</script>
+
+
+</html>
